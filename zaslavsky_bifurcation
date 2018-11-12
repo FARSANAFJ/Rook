@@ -36,7 +36,7 @@ a=1.885;
     out{j} = unique(round(scale*x(end-maxpoints:end)));
 end
 
-% Rearrange cell array into a large n-by-2 vector for plotting
+% Rearrange cell array into a large n-by-2 vector for plotting 
 data = [];
 for k = 1:length(rs)
     n = length(out{k});
