@@ -1,0 +1,48 @@
+%       Zaslavsky map
+%      
+clear all;
+close all;
+clc;
+ scale = 10000; % the level of rounding
+maxpoints = 200; % determines maximum values to plot
+N = 150; % number of "r" values to simulate
+a = 1; % starting value of "r"
+b = 10.0; % final value of "r"
+rs = linspace(a,b,N); % vector of "r" values
+M = 250; % number of iterations of zaslavsky equation
+
+% Loop through the "r" values
+for j = 1:length(rs)
+    
+    r=rs(j); % get current "r"
+    x=zeros(M,1);
+     y=zeros(M,1); 
+    x(1)=0.1;
+y(1)=0.1;
+e=0.3;
+v=0.2;
+% r=5;
+m=(1-exp(-r))/r;
+omega=100;
+k=9;
+a=1.885;
+    for i = 2:M, % iterate
+       x(i)=mod(x(i-1)+omega/(2*pi)+(a*omega)/(2*pi*r)*(1-exp(-r))*y(i-1)+...
+        (k/r)*(1-exp(-r))*cos(2*pi*x(i-1)),1);
+    % Since x(i) is computed mod1 we always have  0<=x(i)<1
+    y(i)=exp(-r)*(y(i-1)+e*cos(2*pi*x(i-1)));
+    end
+    % only save those unique, semi-stable values
+    out{j} = unique(round(scale*x(end-maxpoints:end)));
+end
+
+% Rearrange cell array into a large n-by-2 vector for plotting
+data = [];
+for k = 1:length(rs)
+    n = length(out{k});
+    data = [data;  rs(k)*ones(n,1),out{k}];
+end
+
+% Plot the data
+plot(data(:,1),data(:,2)/scale,'k.','markersize',0.0001);
+axis on
